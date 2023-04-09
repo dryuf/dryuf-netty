@@ -60,7 +60,7 @@ public class CumulatingCharBufferHandlerEndTest
 		}
 	}
 
-	@Test//(timeOut = 10_000L)
+	@Test(timeOut = 10_000L)
 	public void cumulation_interruptedUtf8_cumulated() throws Exception
 	{
 		try (ClientServerTester tester = new ClientServerTester()) {
@@ -88,8 +88,6 @@ public class CumulatingCharBufferHandlerEndTest
 			CompletableFuture<Object> clientFinished = new CompletableFuture<>();
 			DuplexChannel channel = connectClient(tester, serverAddress, "Ha", clientFinished);
 			channel.writeAndFlush(Unpooled.wrappedBuffer(StringUtils.repeat("H", 1_000_001).getBytes(StandardCharsets.UTF_8))).get();
-			Thread.sleep(100);
-			channel.writeAndFlush(Unpooled.wrappedBuffer("\n".getBytes(StandardCharsets.UTF_8))).get();
 
 			expectThrows(IllegalStateException.class, () -> FutureUtil.sneakyGet(serverFinished));
 		}
