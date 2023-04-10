@@ -18,7 +18,7 @@ import io.netty.resolver.dns.DnsNameResolverBuilder;
 import io.netty.util.concurrent.Future;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import net.dryuf.concurrent.FutureUtil;
+import net.dryuf.base.concurrent.future.FutureUtil;
 import net.dryuf.netty.address.AddressSpec;
 import net.dryuf.netty.pipeline.ForwarderHandler;
 import net.dryuf.netty.provider.ChannelProvider;

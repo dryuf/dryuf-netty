@@ -1,14 +1,30 @@
 package net.dryuf.netty.pipeline;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.dryuf.base.function.delegate.TypeDelegatingTriFunction3;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 
-/**
- * Handler distributing the channelRead calls to its own functions based on message type.
- *
- * <pre>
+public class TypeDistributingHandlerTest
+{
+	@Test
+	public void channelRead_specificClass_callSpecificMethod()
+	{
+		TestHandler handler = new TestHandler();
+
+		handler.channelRead(null, new First());
+		assertEquals(handler.called, 1);
+
+		handler.channelRead(null, new Second());
+		assertEquals(handler.called, 2);
+	}
+
+	public static class First {}
+
+	public static class Second {}
+
 	public static class TestHandler extends TypeDistributingHandler<TestHandler, Object, RuntimeException>
 	{
 		private static final TypeDelegatingTriFunction3<TestHandler, ChannelHandlerContext, Object, Void, RuntimeException> distributingCallbacks =
@@ -35,32 +51,5 @@ import net.dryuf.base.function.delegate.TypeDelegatingTriFunction3;
 			called = 2;
 			return null;
 		}
-	}
- * </pre>
- *
- * @param <TP>
- *      type of this class
- * @param <C>
- *      type of message class
- * @param <X>
- *      type of thrown exception by channelRead
- */
-public class TypeDistributingHandler<TP, C, X extends Exception> extends ChannelInboundHandlerAdapter
-{
-	private final TypeDelegatingTriFunction3<TP, ChannelHandlerContext, C, Void, X> callbacks;
-
-	public TypeDistributingHandler(TypeDelegatingTriFunction3<TP, ChannelHandlerContext, C, Void, X> callbacks)
-	{
-		this.callbacks = callbacks;
-	}
-
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws X
-	{
-		@SuppressWarnings("unchecked")
-		TP this0 = (TP) this;
-		@SuppressWarnings("unchecked")
-		C msg0 = (C) msg;
-		callbacks.apply(this0, ctx, msg0);
 	}
 }

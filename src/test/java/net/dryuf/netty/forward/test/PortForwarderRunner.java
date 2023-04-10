@@ -1,7 +1,7 @@
 package net.dryuf.netty.forward.test;
 
 import com.google.common.collect.ImmutableList;
-import net.dryuf.concurrent.FutureUtil;
+import net.dryuf.base.concurrent.future.FutureUtil;
 import net.dryuf.netty.address.AddressSpec;
 import net.dryuf.netty.core.NettyEngine;
 import net.dryuf.netty.core.Server;

@@ -5,7 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.DuplexChannel;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.log4j.Log4j2;
-import net.dryuf.concurrent.FutureUtil;
+import net.dryuf.base.concurrent.future.FutureUtil;
 import net.dryuf.netty.address.AddressSpec;
 import net.dryuf.netty.core.NettyServer;
 import net.dryuf.netty.core.Server;
