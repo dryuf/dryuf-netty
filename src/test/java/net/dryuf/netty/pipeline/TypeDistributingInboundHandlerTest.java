@@ -7,12 +7,12 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 
-public class TypeDistributingHandlerTest
+public class TypeDistributingInboundHandlerTest
 {
 	@Test
-	public void channelRead_specificClass_callSpecificMethod()
+	public void channelRead_specificClass_callSpecificMethod() throws Exception
 	{
-		TestHandler handler = new TestHandler();
+		TestInboundHandler handler = new TestInboundHandler();
 
 		handler.channelRead(null, new First());
 		assertEquals(handler.called, 1);
@@ -25,17 +25,17 @@ public class TypeDistributingHandlerTest
 
 	public static class Second {}
 
-	public static class TestHandler extends TypeDistributingHandler<TestHandler, Object, RuntimeException>
+	public static class TestInboundHandler extends TypeDistributingInboundHandler<TestInboundHandler, Object, RuntimeException>
 	{
-		private static final TypeDelegatingTriFunction3<TestHandler, ChannelHandlerContext, Object, Void, RuntimeException> distributingCallbacks =
-			TypeDelegatingTriFunction3.<TestHandler, ChannelHandlerContext, Object, Void, RuntimeException>callbacksBuilder()
-				.add(First.class, TestHandler::firstHandler)
-				.add(Second.class, TestHandler::secondHandler)
+		private static final TypeDelegatingTriFunction3<TestInboundHandler, ChannelHandlerContext, Object, Void, RuntimeException> distributingCallbacks =
+			TypeDelegatingTriFunction3.<TestInboundHandler, ChannelHandlerContext, Object, Void, RuntimeException>callbacksBuilder()
+				.add(First.class, TestInboundHandler::firstHandler)
+				.add(Second.class, TestInboundHandler::secondHandler)
 				.build();
 
 		int called = 0;
 
-		public TestHandler()
+		public TestInboundHandler()
 		{
 			super(distributingCallbacks);
 		}

@@ -1,12 +1,14 @@
 package net.dryuf.netty.pipeline;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import net.dryuf.base.function.delegate.TypeDelegatingTriFunction3;
 
 
 /**
  * Handler distributing the channelRead calls to its own functions based on message type.
+ *
+ * The message is automatically released in parent handler, no need to call ReferenceCountUtil.release() again.
  *
  * <pre>
 	public static class TestHandler extends TypeDistributingHandler<TestHandler, Object, RuntimeException>
@@ -40,27 +42,25 @@ import net.dryuf.base.function.delegate.TypeDelegatingTriFunction3;
  *
  * @param <TP>
  *      type of this class
- * @param <C>
- *      type of message class
+ * @param <I>
+ *      type of input message
  * @param <X>
  *      type of thrown exception by channelRead
  */
-public class TypeDistributingHandler<TP, C, X extends Exception> extends ChannelInboundHandlerAdapter
+public class TypeDistributingInboundHandler<TP, I, X extends Exception> extends SimpleChannelInboundHandler<I>
 {
-	private final TypeDelegatingTriFunction3<TP, ChannelHandlerContext, C, Void, X> callbacks;
+	private final TypeDelegatingTriFunction3<TP, ChannelHandlerContext, I, Void, X> callbacks;
 
-	public TypeDistributingHandler(TypeDelegatingTriFunction3<TP, ChannelHandlerContext, C, Void, X> callbacks)
+	public TypeDistributingInboundHandler(TypeDelegatingTriFunction3<TP, ChannelHandlerContext, I, Void, X> callbacks)
 	{
 		this.callbacks = callbacks;
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws X
+	public void channelRead0(ChannelHandlerContext ctx, I msg) throws X
 	{
 		@SuppressWarnings("unchecked")
 		TP this0 = (TP) this;
-		@SuppressWarnings("unchecked")
-		C msg0 = (C) msg;
-		callbacks.apply(this0, ctx, msg0);
+		callbacks.apply(this0, ctx, msg);
 	}
 }
