@@ -8,7 +8,7 @@ Set of reusable Netty components.
 <dependency>
 	<groupId>net.dryuf</groupId>
 	<artifactId>dryuf-netty</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.2</version>
 </dependency>
 ```
 

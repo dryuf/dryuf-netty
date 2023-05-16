@@ -517,7 +517,7 @@ public class NettyEngine implements Closeable
 			if (SystemUtils.IS_OS_LINUX) {
 				return new EpollChannelProvider();
 			}
-			else if (SystemUtils.IS_OS_MAC_OSX) {
+			else if (SystemUtils.IS_OS_MAC_OSX || SystemUtils.IS_OS_FREE_BSD) {
 				return new KqueueChannelProvider();
 			}
 		}
@@ -527,6 +527,15 @@ public class NettyEngine implements Closeable
 		return new NioChannelProvider();
 	}
 
+	/**
+	 * Creates SocketAddress from AddressSpec.
+	 *
+	 * @param addressSpec
+	 *      address specification
+	 *
+	 * @return
+	 *      SocketAddress from AddressSpec.
+	 */
 	public SocketAddress getProtoAddress(AddressSpec addressSpec)
 	{
 		switch (addressSpec.getProto()) {
@@ -543,10 +552,19 @@ public class NettyEngine implements Closeable
 			return UnixDomainSocketAddress.of(addressSpec.getPath());
 
 		default:
-			throw new IllegalArgumentException("Unsupported proto: " + addressSpec.getProto());
+			throw new IllegalArgumentException("Unsupported proto: proto=" + addressSpec.getProto());
 		}
 	}
 
+	/**
+	 * Returns whether protocol is flexible in supported version.
+	 *
+	 * @param proto
+	 *      protocol name
+	 *
+	 * @return
+	 *      whether protocol is flexible in supported version, such as it can match both IPv4 and IPv6.
+	 */
 	public static boolean isProtoNeutral(String proto)
 	{
 		if (proto == null) {
