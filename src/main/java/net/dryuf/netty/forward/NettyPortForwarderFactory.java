@@ -15,8 +15,8 @@ import net.dryuf.netty.core.Server;
 import net.dryuf.netty.pipeline.FullFlowControlHandler;
 import net.dryuf.netty.util.NettyFutures;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;

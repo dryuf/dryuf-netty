@@ -28,8 +28,8 @@ import net.dryuf.netty.provider.NioChannelProvider;
 import net.dryuf.netty.util.NettyFutures;
 import org.apache.commons.lang3.SystemUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
